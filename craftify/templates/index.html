@@ -1,31 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-
-    <title>Home Page</title>
-    <!-- Add your head content here (stylesheets, scripts, etc.) -->
-
-    <!-- Include Tailwind CSS -->
-    
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
-</head>
-
-<body class="bg-gray-100">
-
-    <nav class="border-b-2 bg-transparent py-4 px-8 absolute w-full z-10">
-        <div class="container mx-auto flex justify-between">
-            <a href="#" class="text-2xl font-bold text-white">Craftify</a>
-            <!-- Add your navigation links here -->
-            <div class="space-x-4 text-white">
-                <a href="#" class="hover:text-blue-600">Home</a>
-                <a href="#" class="hover:text-blue-600">Explore</a>
-                <!-- <a href="#" class="hover:text-gray-300">Profile</a> -->
-                <span><a href="#" class="hover:text-blue-600">Login</a> / <a href="#" class="hover:text-blue-600">Register</a></span>
-            </div>
-        </div>
-    </nav>
-
+{% block content %}
 
 
     <!-- Hero Section -->
@@ -100,14 +75,4 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-6 px-8">
-        <div class="container mx-auto text-center">
-            <!-- Add your footer content here (e.g., copyright, contact information) -->
-            <p>&copy; 2023 Craftify. All rights reserved.</p>
-        </div>
-    </footer>
-
-</body>
-
-</html>
+{% endblock %}
