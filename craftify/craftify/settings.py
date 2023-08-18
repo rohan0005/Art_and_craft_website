@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'widget_tweaks',
+
 ]
 
 MIDDLEWARE = [
@@ -124,9 +126,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS =[
-    BASE_DIR, "static"
-]
 
 
 import os
@@ -139,3 +138,16 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+
+#upload Image
+
+MEDIA_URL ='/images/'
+
+
+STATICFILES_DIRS =[
+    BASE_DIR / "static"
+]
+
+MEDIA_ROOT = BASE_DIR / 'static/images'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
