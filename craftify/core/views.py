@@ -17,9 +17,46 @@ def index(request):
     return render(request, "index.html")
 
 
+# Explore Page
+def explore(request, category=None):
+    cat = None
+    if category:
+        
+        cat = category
+        
+        if UserUploadedItem.objects.filter(category=category).exists():
+            allItems = UserUploadedItem.objects.filter(category=category).order_by('-id')
+        else:
+            return redirect('explore')
 
-def explore(request):
-    return render(request, 'explore.html')
+
+   
+    else:
+        allItems = UserUploadedItem.objects.all().order_by('-id')
+        
+        # IF USER SEARCH
+        if request.method=="GET":
+            src = request.GET.get('search_content')
+        # print("you search for", src)
+        if src != None:
+            
+            if UserUploadedItem.objects.filter(title__icontains=src).exists():
+                allItems = UserUploadedItem.objects.filter(title__icontains=src)
+            else:
+                allItems = UserUploadedItem.objects.all().order_by('-id')
+                  
+
+        else:
+            allItems = UserUploadedItem.objects.all().order_by('-id')
+            
+            
+    
+    context= {
+        'allItems': allItems,
+        'cat': cat,
+    }
+    
+    return render(request, 'explore.html', context) 
 
 
 # LOGIN
@@ -73,20 +110,7 @@ def dashboard(request):
     AllItems = UserUploadedItem.objects.filter(user=request.user).order_by('-id')
     
     #counting the total items
-    total_items = UserUploadedItem.objects.filter(user=request.user).   count()
-    
-    # if request.method == 'POST':
-        
-    #     form = UserUploadedItemForm(request.POST, request.FILES)
-    #     if form.is_valid():
-    #         instance = form.save(commit=False) #commit=False helps to not to save the form
-    #         instance.user = request.user
-    #         instance.save()
-    #         # Creating a new empty form instance
-    #         #form = UserUploadedItemForm() 
-    #         return redirect('dashboard') 
-    #     else:
-    #             return render(request, 'dashboard.html')
+    total_items = UserUploadedItem.objects.filter(user=request.user).count()
            
     context = {
         'form': form,
@@ -96,6 +120,7 @@ def dashboard(request):
 
     return render(request, 'dashboard.html', context)
 
+#Login is required for adding item
 @login_required(login_url="login")
 def addItem(request):
     form = UserUploadedItemForm()
@@ -122,12 +147,6 @@ def addItem(request):
     return render(request, 'addItem.html', context)
     
 
-
-
-
-
-
-
 #deleting item
 @login_required(login_url="login")
 def deleteItem(request, item_id):
@@ -141,7 +160,6 @@ def deleteItem(request, item_id):
 def editItem(request, item_id):
     
      # If user click edit option
-    # editItem = UserUploadedItem.objects.get(id=item_id)
     
     editItem = get_object_or_404(UserUploadedItem, id=item_id, user=request.user)
 

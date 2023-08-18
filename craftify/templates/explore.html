@@ -3,25 +3,7 @@
 {% load static %}
 {% block content %}
 
-
-  <!-- Include Slick Carousel JavaScript -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-  <script>
-      $(document).ready(function(){
-          $('.slick-carousel').slick({
-              dots: false,
-              arrows: false,
-
-              infinite: true,
-              slidesToShow: 1,
-              slidesToScroll: 1,
-              autoplay: true,
-              autoplaySpeed: 3000 
-          });
-      });
-  </script>
-
+<!-- Heading and Search section -->
 <section>
     <div class="grid md:grid-cols-2 sm:grid-cols-1 p-12 ">
         <div>
@@ -32,7 +14,8 @@
 
         <div class=" justify-end">
             
-            <form>   
+            <form method="get" action="">
+                {% csrf_token %}
                 <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -40,7 +23,7 @@
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                         </svg>
                     </div>  
-                    <input type="search" id="default-search" class="focus:outline-none block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for Art & Craft" required>
+                    <input type="search" name="search_content" id="default-search" class="focus:outline-none block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for Art & Craft" required>
                     <button type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
                 </div>
             </form>
@@ -52,191 +35,74 @@
 
 
 
-
+<!-- Category -->
 <section class="py-4 px-2 ">
     <div class="container mx-auto">
         <!-- Filter options -->
         <div class="flex justify-center space-x-4 ">
             <!-- Replace with dynamic categories from Django -->
-            <button class="px-4 py-2 rounded-lg border border-gray-500 hover:bg-gray-100">All</button>
-            <button class="px-4 py-2 rounded-lg border border-gray-500 hover:bg-gray-100">Paintings</button>
-            <button class="px-4 py-2 rounded-lg border border-gray-500 hover:bg-gray-100">Sculptures</button>
+            <a href="{% url 'explore' %}" class="px-4 py-2 rounded-lg border border-gray-500 hover:bg-gray-100">All</a>
+            <a  href="{% url 'explore-cat' category='paintings' %}" class="px-4 py-2 rounded-lg border border-gray-500 hover:bg-gray-100">Paintings</a>
+            <a href="{% url 'explore-cat' category='sculptures' %}" class="px-4 py-2 rounded-lg border border-gray-500 hover:bg-gray-100">Sculptures</a>
+            <a href="{% url 'explore-cat' category='crafts' %}" class="px-4 py-2 rounded-lg border border-gray-500 hover:bg-gray-100">Crafts</a>
+            
             <!-- Add more filter options as needed -->
         </div>
+
+        
+        {% if cat %}
+
+        <div>
+            <h1 class="text-2xl text-gray-600">Search for {{cat|capfirst}}</h1>
+        </div>
+            
+        {% endif %}
+            
+       
+
     </div>
 </section>
 
 
-
+<!-- Content -->
 <section>
-    <h1 class="text-3xl pl-10 ">By <span class="text-blue-400">Leonardo da Vinci</span></h1>
-
-    <div class="grid  sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
-        <div class="max-w-md mx-auto my-8 p-4 bg-white border border-gray-300 rounded-lg shadow-md">
-            <div class="slick-carousel">
-                <div><img src="https://images.all-free-download.com/images/graphicwebp/andreas_achenbach_painting_art_213907.webp" alt="Image 1" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <div><img src="{% static 'static/images/b.jpg' %}" alt="Image 2" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <div><img src="{% static 'static/images/b.jpg' %}" alt="Image 3" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <!-- Add more images here -->
-            </div>
-            <div class="p-4">
-                <h2 class="text-xl font-semibold mb-2">Mona Lisa
-                    Painting</h2>
-                <p><span>by <a class="text-blue-800" href="#">Leonardo da Vinci</a></span> </p>
-                <p class="text-gray-600">The Mona Lisa is a half-length portrait painting by Italian artist Leonardo da Vinci...</p>
-                <span><p> Category: <span><a href="#">Art</a></span>  </p></span>
-                <span>Price: <span class="font-medium">$999</span></span>
-                <span><a href="#" class="block mt-3 text-blue-500 hover:underline">View Details</a></span>
-            </div>
-        </div> 
+    {% comment %} <h1 class="text-3xl pl-10 ">By <span class="text-blue-400">Leonardo da Vinci</span></h1> {% endcomment %}
+    
 
 
+    <div class="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
 
-
-
-
-
-
-
-
-
-        <div class="max-w-md  mx-auto my-8 p-4 bg-white border border-gray-300 rounded-lg shadow-md">
-            <div class="slick-carousel">
-                <div><img src="{% static 'static/images/b.jpg' %}" alt="Image 1" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <div><img src="{% static 'static/images/b.jpg' %}" alt="Image 2" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <div><img src="{% static 'static/images/b.jpg' %}" alt="Image 3" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <!-- Add more images here -->
-            </div>
-            <div class="p-4">
-                <h2 class="text-xl font-semibold mb-2">Mona Lisa
-                    Painting</h2>
-                <p><span>by <a class="text-blue-800" href="#">Leonardo da Vinci</a></span> </p>
-                <p class="text-gray-600">The Mona Lisa is a half-length portrait painting by Italian artist Leonardo da Vinci...</p>
-                <span><p> Category: <span><a href="#">Art</a></span>  </p></span>
-                <span>Price: <span class="font-medium">$999</span></span>
-                <span><a href="#" class="block mt-3 text-blue-500 hover:underline">View Details</a></span>
-            </div>
-
-
-
-        </div> 
-
+        {% for item in allItems %}
 
         <div class="max-w-md mx-auto my-8 p-4 bg-white border border-gray-300 rounded-lg shadow-md">
-            <div class="slick-carousel">
-                <div><img src="{% static 'static/images/b.jpg' %}" alt="Image 1" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <div><img src="{% static 'static/images/b.jpg' %}" alt="Image 2" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <div><img src="{% static 'static/images/b.jpg' %}" alt="Image 3" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <!-- Add more images here -->
+            <div>
+                <div>
+                    <img src="{{item.image.url}}" alt="Image 1" class="w-full h-64 object-cover rounded-t-lg">
+                </div>
             </div>
-            <div class="p-4">
-                <h2 class="text-xl font-semibold mb-2">Mona Lisa
-                    Painting</h2>
-                <p><span>by <a class="text-blue-800" href="#">Leonardo da Vinci</a></span> </p>
-                <p class="text-gray-600">The Mona Lisa is a half-length portrait painting by Italian artist Leonardo da Vinci...</p>
-                <span><p> Category: <span><a href="#">Art</a></span>  </p></span>
-                <span>Price: <span class="font-medium">$999</span></span>
-                <span><a href="#" class="block mt-3 text-blue-500 hover:underline">View Details</a></span>
-            </div>
-
-
+                <div class="p-4">
+                    <h2 class="text-xl font-semibold mb-2">{{item.title}}</h2>
+                    <p><span>by <a class="text-blue-800" href="#">{{item.user.first_name}} {{item.user.last_name}}</a></span> </p>
+                    <p class="text-gray-600">{{item.description|truncatewords:20}}</p>
+                    <span><p> Category: <span><a href="#">{{item.category|capfirst }}</a></span>  </p></span>
+                    <span>Price: <span class="font-medium"><span>$ </span>{{item.price}}</span></span>
+                    <span><a href="#" class="block mt-3 text-blue-500 hover:underline">View Details</a></span>
+                </div> 
 
         </div> 
-
-
-
-
-
-
-
-
-        <div class="max-w-md mx-auto my-8 p-4 bg-white border border-gray-300 rounded-lg shadow-md">
-            <div class="slick-carousel">
-                <div><img src="{% static 'static/images/b.jpg' %}" alt="Image 1" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <div><img src="{% static 'static/images/b.jpg' %}" alt="Image 2" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <div><img src="{% static 'static/images/b.jpg' %}" alt="Image 3" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <!-- Add more images here -->
-            </div>
-            <div class="p-4">
-                <h2 class="text-xl font-semibold mb-2">Mona Lisa
-                    Painting</h2>
-                <p><span>by <a class="text-blue-800" href="#">Leonardo da Vinci</a></span> </p>
-                <p class="text-gray-600">The Mona Lisa is a half-length portrait painting by Italian artist Leonardo da Vinci...</p>
-                <span><p> Category: <span><a href="#">Art</a></span>  </p></span>
-                <span>Price: <span class="font-medium">$999</span></span>
-                <span><a href="#" class="block mt-3 text-blue-500 hover:underline">View Details</a></span>
-            </div>
-
-
-
-        </div> 
-
-
-
-
-
-
-
-
-
-
-
-        <div class="max-w-md mx-auto my-8 p-4 bg-white border border-gray-300 rounded-lg shadow-md">
-            <div class="slick-carousel">
-                <div><img src="{% static 'static/images/b.jpg' %}" alt="Image 1" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <div><img src="{% static 'static/images/b.jpg' %}" alt="Image 2" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <div><img src="{% static 'static/images/b.jpg' %}" alt="Image 3" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <!-- Add more images here -->
-            </div>
-            <div class="p-4">
-                <h2 class="text-xl font-semibold mb-2">Mona Lisa
-                    Painting</h2>
-                <p><span>by <a class="text-blue-800" href="#">Leonardo da Vinci</a></span> </p>
-                <p class="text-gray-600">The Mona Lisa is a half-length portrait painting by Italian artist Leonardo da Vinci...</p>
-                <span><p> Category: <span><a href="#">Art</a></span>  </p></span>
-                <span>Price: <span class="font-medium">$999</span></span>
-                <span><a href="#" class="block mt-3 text-blue-500 hover:underline">View Details</a></span>
-            </div>
-
-
-
-        </div> 
-
-
-
-
-
-
-
-
-        <div class="max-w-md mx-auto my-8 p-4 bg-white border border-gray-300 rounded-lg shadow-md">
-            <div class="slick-carousel">
-                <div><img src="{% static 'static/images/b.jpg' %}" alt="Image 1" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <div><img src="{% static 'static/images/b.jpg' %}" alt="Image 2" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <div><img src="{% static 'static/images/b.jpg' %}" alt="Image 3" class="w-full h-48 object-cover rounded-t-lg"></div>
-                <!-- Add more images here -->
-            </div>
-            <div class="p-4">
-                <h2 class="text-xl font-semibold mb-2">Mona Lisa
-                    Painting</h2>
-                <p><span>by <a class="text-blue-800" href="#">Leonardo da Vinci</a></span> </p>
-                <p class="text-gray-600">The Mona Lisa is a half-length portrait painting by Italian artist Leonardo da Vinci...</p>
-                <span><p> Category: <span><a href="#">Art</a></span>  </p></span>
-                <span>Price: <span class="font-medium">$999</span></span>
-                <span><a href="#" class="block mt-3 text-blue-500 hover:underline">View Details</a></span>
-            </div>
-
-
-
-        </div> 
-    </div> 
-
+        {% endfor %}
     </div>
+    
+        
+    
+        
+   
+
 </section>
 
 
 
-
+<!-- Pagination -->
 <section class="container mx-auto text-center mb-7">
     <nav aria-label="Page navigation example">
         <ul class="inline-flex -space-x-px text-base h-10">

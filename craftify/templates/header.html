@@ -17,7 +17,7 @@
 
 
 
-    {% if request.path == '/explore' %}
+    {% if request.path == '/explore' or request.path == '/explore-cat/crafts/' or request.path == '/explore-cat/sculptures/' or request.path == '/explore-cat/paintings/' %}
         <nav class="border-b-2  py-4 px-8 w-full z-10">
             {% else %}
             <nav class="border-b-2 bg-transparent py-4 px-8 absolute w-full z-10">
@@ -25,17 +25,17 @@
     {% endif %}
     
         <div class="container mx-auto flex justify-between">
-            {% if request.path == '/explore' %}
-            <a href="#" class="text-2xl font-bold text-black">Craftify</a>
+            {% if request.path == '/explore' or request.path == '/explore-cat/crafts/' or request.path == '/explore-cat/sculptures/' or request.path == '/explore-cat/paintings/' %}
+            <a href="{% url 'index' %}" class="text-2xl font-bold text-black">Craftify</a>
 
             {% else %}
-            <a href="#" class="text-2xl font-bold text-white">Craftify</a>
+            <a href="{% url 'index' %}" class="text-2xl font-bold text-white">Craftify</a>
 
             {% endif %}
 
 
             <!-- Add your navigation links here -->
-            {% if request.path == '/explore' %}
+            {% if request.path == '/explore' or request.path == '/explore-cat/crafts/' or request.path == '/explore-cat/sculptures/' or request.path == '/explore-cat/paintings/' %}   
                 <div class="space-x-4 text-black  ">
             {% else %}
             <div class="space-x-4 text-white  ">

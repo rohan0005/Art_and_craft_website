@@ -18,6 +18,10 @@ urlpatterns = [
     
     path('edit/<int:item_id>/', views.editItem, name='edit'),
     
+    # path('explore-category/<str:category>/', views.explore, name='explore-category'),
+    path('explore-cat/<str:category>/', views.explore, name='explore-cat'),
+    
+    
     
  
 ]
