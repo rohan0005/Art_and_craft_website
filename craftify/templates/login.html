@@ -4,8 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Craftify | Login</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
+    {% comment %} for toastify {% endcomment %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </head>
 <body class="bg-gray-100">
     <div class="flex items-center justify-center min-h-screen">
@@ -21,11 +24,31 @@
                 
                 {% endfor %}
             </div>
-            <button class="mt-6 w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700">Login</button>
+            <button  id="login-button" class="mt-6 w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700">Login</button>
             </form>
             <p class="text-center text-gray-600 mt-4">Don't have an account? <a href="{% url 'register' %}" class="text-blue-500 hover:underline">Sign Up</a></p>
         </div>
         
     </div>
 </body>
+<script>
+    document.getElementById('login-button').addEventListener('click', function() {
+        Toastify({
+            text: "Successfully Logged In",
+            duration: 3000,
+            destination: "https://github.com/apvarun/toastify-js",
+            newWindow: true,
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "left", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+            },
+            onClick: function(){} // Callback after click
+        }).showToast();
+    });
+
+    
+</script>
 </html>

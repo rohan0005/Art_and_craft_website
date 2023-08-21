@@ -3,11 +3,11 @@ from .forms import *
 from django.contrib import messages
 
 from django.contrib.auth import authenticate, login, logout
-
-
 #Login required
 from django.contrib.auth.decorators import login_required
-
+# Paginator
+from django.core.paginator import Paginator
+from math import ceil
 
 
 # Create your views here.
@@ -19,25 +19,79 @@ def index(request):
 
 # Explore Page
 def explore(request, category=None):
+    
+    Items = UserUploadedItem.objects.all().order_by('-id')
+    
+    # Pagination   
+    paginator = Paginator(Items,6)
+    pageNum = request.GET.get('page') 
+    # current page
+    allItems = paginator.get_page(pageNum)
+    
+    # Total Page
+    totalPage = allItems.paginator.num_pages
+    
+    num_visible_pages = 3
+    middle_page = int(ceil(num_visible_pages / 2))
+    start_page = max(1, allItems.number - middle_page + 1)
+    end_page = min(start_page + num_visible_pages, totalPage + 1)
+
+    # Generate the list of visible pages
+    page_list = range(start_page, end_page)
+
     cat = None
     if category:
-        
         cat = category
         
+        # is user select category
         if UserUploadedItem.objects.filter(category=category).exists():
+            
             allItems = UserUploadedItem.objects.filter(category=category).order_by('-id')
+            
+            # is user search from category 
+            if request.method=="GET":
+                src = request.GET.get('search_content')
+                # if search input not none
+                if src != None:
+                    Items = allItems.filter(title__icontains=src)
+                    paginator = Paginator(Items,6)
+                    pageNum = request.GET.get('page')
+                    allItems = paginator.get_page(pageNum)
+                    
+                    # Total Page
+                    totalPage = allItems.paginator.num_pages
+                    
+                    num_visible_pages = 3
+                    middle_page = int(ceil(num_visible_pages / 2))
+                    start_page = max(1, allItems.number - middle_page + 1)
+                    end_page = min(start_page + num_visible_pages, totalPage + 1)
+
+                    # Generate the list of visible pages
+                    page_list = range(start_page, end_page)
+                 
+            else:
+            
+                allItems = UserUploadedItem.objects.filter(category=category).order_by('-id')
+                     
         else:
             return redirect('explore')
 
 
    
     else:
-        allItems = UserUploadedItem.objects.all().order_by('-id')
+        # current page
+        allItems = paginator.get_page(pageNum)
         
+        # Total Page
+        totalPage = allItems.paginator.num_pages
+
+        # list of pages
+        page_list = range(start_page, end_page)
+
         # IF USER SEARCH
         if request.method=="GET":
             src = request.GET.get('search_content')
-        # print("you search for", src)
+
         if src != None:
             
             if UserUploadedItem.objects.filter(title__icontains=src).exists():
@@ -47,13 +101,29 @@ def explore(request, category=None):
                   
 
         else:
-            allItems = UserUploadedItem.objects.all().order_by('-id')
+            # PAGINATION
+            # current page
+            allItems = paginator.get_page(pageNum)
             
+            # Total Page
+            totalPage = allItems.paginator.num_pages
+
+            # list of pages
+            page_list = range(start_page, end_page)
             
-    
+
     context= {
-        'allItems': allItems,
+        'allItems': allItems,   
         'cat': cat,
+        # paginator
+        
+        # Last Page
+        'lastPage': totalPage,
+
+        # Page List
+        'page_list': page_list,
+        
+        
     }
     
     return render(request, 'explore.html', context) 
@@ -106,6 +176,9 @@ def logoutUser(request):
 def dashboard(request):
     form = UserUploadedItemForm()
     
+    if request.user.is_authenticated:
+        first_name = request.user.first_name
+    
     # filtering only items that is uploaded by current logged in user
     AllItems = UserUploadedItem.objects.filter(user=request.user).order_by('-id')
     
@@ -115,7 +188,8 @@ def dashboard(request):
     context = {
         'form': form,
         'AllItems' : AllItems,
-        'total_items' : total_items, 
+        'total_items' : total_items,
+        'first_name': first_name,
     }  
 
     return render(request, 'dashboard.html', context)
@@ -166,11 +240,11 @@ def editItem(request, item_id):
     if request.method == 'POST':
         form = UserUploadedItemForm(request.POST, request.FILES, instance=editItem)
         if form.is_valid():
-            print("valid")
             form.save()
             return redirect('dashboard')
         else:
-            print("Not valid")
+            print(form.errors)
+            return redirect('dashboard')
 
     #if not a POST request or if form is not valid
     else:

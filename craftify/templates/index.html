@@ -1,16 +1,18 @@
 {% extends 'base.html' %}
 
+{% load static %}
+{% block title %}Craftify | Home{% endblock %}
 {% block content %}
 
 
     <!-- Hero Section -->
     <section class="h-screen flex items-center justify-center bg-blue-900 text-white bg-cover bg-center relative"
-    style="background-image: url('https://img.freepik.com/free-photo/autumn-season-brings-bright-yellow-multi-colored-leaves-generative-ai_188544-12676.jpg?w=1060&t=st=1691431148~exp=1691431748~hmac=ac9dae58b01a25c7097385e66034425f4a07e5ff53e86f3aa8d04f667c96e5bb.jpg');">
+    style="background-image: url('{% static 'images/home.jpg' %}');">
 <div class="absolute inset-0 bg-black opacity-50"></div>
 <div class="container mx-auto text-center relative z-10">
    <h1 class="text-5xl font-bold mb-4">Welcome to Craftify</h1>
    <p class="text-lg mb-9">Unleash your creativity and explore the world of art and craft.</p>
-   <a href="#" class="border-2 hover: text-white-900 font-bold px-8 py-4 rounded-lg hover:bg-red-800">Get Started</a>
+   <a href="{% url 'explore' %}" class="border-2 hover: text-white-900 font-bold px-8 py-4 rounded-lg hover:bg-red-800">Get Started</a>
 </div>
 </section>
 
@@ -50,14 +52,15 @@
 
                 <div class="max-w-xs mx-auto">
                     <div class="bg-blue-900 text-white rounded-full w-16 h-16 flex items-center justify-center mb-4">
-                        <svg class="w-8 h-8 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                        <svg xmlns="http://www.w3.org/2000/svg" 
+                        height="1em" viewBox="0 0 512 512">
+                        <style>svg{fill:#ffffff}</style><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"/>
                         </svg>
                         
                             
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">Unleash Your Creative Journey</h3>
-                    <p class="text-gray-600">Ignite your imagination, collaborate with artists, and shape your creative voyage.</p>
+                    <h3 class="text-xl font-semibold mb-2">Your Own Dashboard</h3>
+                    <p class="text-gray-600">Add items, view total orders, view requested items and on on through your own dashboard</p>
                 </div>
           
             </div>
@@ -67,12 +70,21 @@
     </section>
 
     <!-- Call to Action Section -->
-    <section class="py-16 px-8 text-center bg-blue-900 text-white">
-        <div class="container mx-auto">
-            <h2 class="text-3xl font-bold mb-4">Join Craftify Today</h2>
-            <p class="text-lg mb-6">Start exploring, creating, and connecting with the vibrant art community.</p>
-            <a href="#" class="inline-block bg-white text-blue-900 font-bold px-8 py-4 rounded-lg hover:bg-blue-100">Sign Up</a>
+    
+    {% if request.user.is_authenticated %}
+        <div>
+
         </div>
-    </section>
+        {% else %}
+        <section class="py-16 px-8 text-center bg-blue-900 text-white">
+            <div class="container mx-auto">
+                <h2 class="text-3xl font-bold mb-4">Join Craftify Today</h2>
+                <p class="text-lg mb-6">Start exploring, creating, and connecting with the vibrant art community.</p>
+                <a href="{% url 'register' %}" class="inline-block bg-white text-blue-900 font-bold px-8 py-4 rounded-lg hover:bg-blue-100">Sign Up</a>
+            </div>
+        </section>
+    {% endif %}
+        
+    
 
 {% endblock %}

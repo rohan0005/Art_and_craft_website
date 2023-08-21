@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% block title %}Craftify | Explore{% endblock %}
 {% block content %}
 
 <!-- Heading and Search section -->
@@ -104,29 +105,106 @@
 
 <!-- Pagination -->
 <section class="container mx-auto text-center mb-7">
-    <nav aria-label="Page navigation example">
+    <nav aria-label="Page navigation example">  
         <ul class="inline-flex -space-x-px text-base h-10">
+
+        <!-- First page -->
+            
+
+            {% if cat %}
+
+                <li>
+                    <a href="{% url 'explore-cat' cat %}?page=1 " class="flex items-center justify-center px-4 h-10 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">First</a>
+                </li>
+
+            {% else %}
+
+                <li>
+                    <a href="{% url 'explore'%}?page=1 " class="flex items-center justify-center px-4 h-10 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">First</a>
+                </li>
+
+            {% endif %}
+
+
+            <!-- PREVIOUS PAGE -->
+           {% if cat %}
+
+                {%if allItems.has_previous%}
+                <li>
+                    <a href="{% url 'explore-cat' cat %}?page={{allItems.previous_page_number}}" class="flex items-center justify-center px-4 h-10 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+                </li>
+                {% endif %}
+
+            {% else %}
+
+                {%if allItems.has_previous%}
+                <li>
+                    <a href="{% url 'explore'%}?page={{allItems.previous_page_number}}" class="flex items-center justify-center px-4 h-10 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+                </li>
+                {% endif %}
+
+            {% endif %}
+        
+
+
+            <!-- PAGE NUMBER -->
+            {% if cat %}
+
+                {% for num in page_list %}
+                <li>
+                    <a href="{% url 'explore-cat' cat %}?page={{num}}" class="{% if num == allItems.number %} text-gray-100 bg-blue-400 %} {% else %}  text-gray-500 {% endif %} flex items-center justify-center px-4 h-10 leading-tight bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{num}}</a>
+                </li>
+                {% endfor %}
+
+            {% else %}
+
+                {% for num in page_list %}
+                <li>
+                    <a href="{% url 'explore'%}?page={{num}}" class="{% if num == allItems.number %} text-gray-100 bg-blue-400 %} {% else %}  text-gray-500 {% endif %} flex items-center justify-center px-4 h-10 leading-tight bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{num}}</a>
+                </li>
+                {% endfor %}
+
+            {% endif %}
+
+          
+          <!-- Showing ... if there is multiple page -->
+          {%if allItems.has_next %}
+
+          {%if allItems.has_other_pages %}
           <li>
-            <a href="#" class="flex items-center justify-center px-4 h-10 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+              <p  class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</p>
           </li>
-          <li>
-            <a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-          </li>
-          <li>
-            <a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-          </li>
-          <li>
-            <a href="#" aria-current="page" class="flex items-center justify-center px-4 h-10 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-          </li>
-          <li>
-            <a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">4</a>
-          </li>
-          <li>
-            <a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">5</a>
-          </li>
-          <li>
-            <a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
-          </li>
+          {% endif %}
+
+
+    
+
+          <!-- LAST PAGE -->
+          {% if cat %}
+            <li>
+                <a href="{% url 'explore-cat' cat %}?page={{ lastPage }}" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Last</a>
+            </li>
+          {% else %}
+                <li>
+                    <a href="{% url 'explore'%}?page={{lastPage}}" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Last</a>
+                </li>
+          {% endif %}
+
+
+          <!-- NEXT PAGE -->
+          {% if cat %}
+            <li>
+                <a href="{% url 'explore-cat' cat %}?page={{ allItems.next_page_number }}" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+            </li>
+        {% else %}
+            <li>
+                <a href="{% url 'explore' %}?page={{ allItems.next_page_number }}" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+            </li>
+        {% endif %}
+
+
+          
+          {% endif %}
         </ul>
       </nav>
 </section>
