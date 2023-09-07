@@ -21,6 +21,7 @@ urlpatterns = [
     # path('explore-category/<str:category>/', views.explore, name='explore-category'),
     path('explore-cat/<str:category>/', views.explore, name='explore-cat'),
     
+    path('cart', views.cart, name='cart'),  
     
     
  

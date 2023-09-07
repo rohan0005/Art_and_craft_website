@@ -20,6 +20,26 @@ def index(request):
 # Explore Page
 def explore(request, category=None):
     
+    if request.method=="POST":
+        if "add" in request.POST:
+            if request.POST.get("item_title"):
+                item_title= request.POST.get("item_title")
+                item_category= request.POST.get("item_category")
+                item_price= request.POST.get("item_price")
+                img= request.POST.get("item_image")
+                item_image = img.replace("/images/images/", "/images/")
+                print(item_image)
+                uploaded_user= request.POST.get("user")
+                
+                user_instance = User.objects.get(username=uploaded_user)
+                 
+                
+                addToCart = Cart(title=item_title,category=item_category,price=item_price,image=item_image,user=user_instance)
+                
+                addToCart.save()
+                
+            
+    
     Items = UserUploadedItem.objects.all().order_by('-id')
     
     # Pagination   
@@ -92,24 +112,24 @@ def explore(request, category=None):
         if request.method=="GET":
             src = request.GET.get('search_content')
 
-        if src != None:
-            
-            if UserUploadedItem.objects.filter(title__icontains=src).exists():
-                allItems = UserUploadedItem.objects.filter(title__icontains=src)
-            else:
-                allItems = UserUploadedItem.objects.all().order_by('-id')
+            if src != None:
+                
+                if UserUploadedItem.objects.filter(title__icontains=src).exists():
+                    allItems = UserUploadedItem.objects.filter(title__icontains=src)
+                else:
+                    allItems = UserUploadedItem.objects.all().order_by('-id')
                   
 
-        else:
-            # PAGINATION
-            # current page
-            allItems = paginator.get_page(pageNum)
-            
-            # Total Page
-            totalPage = allItems.paginator.num_pages
+            else:
+                # PAGINATION
+                # current page
+                allItems = paginator.get_page(pageNum)
+                
+                # Total Page
+                totalPage = allItems.paginator.num_pages
 
-            # list of pages
-            page_list = range(start_page, end_page)
+                # list of pages
+                page_list = range(start_page, end_page)
             
 
     context= {
@@ -252,3 +272,30 @@ def editItem(request, item_id):
 
     
     return render(request, 'addItem.html', {'editItem':editItem, 'form': form})
+
+
+# Cart
+def cart(request):
+    
+    cartItems = Cart.objects.filter(user=request.user)
+    
+    # Calculating total price
+    totalPrice=0
+    for item in cartItems:
+        totalPrice += item.price
+    
+    totalProducts = cartItems.count()
+    
+    
+    
+    # u = request.user
+    # print(cartItems)
+    
+    context={
+        'cartItems':cartItems,
+        'totalProducts':totalProducts,
+        'totalPrice':totalPrice,
+    }
+
+    
+    return render(request, 'cart.html', context)
