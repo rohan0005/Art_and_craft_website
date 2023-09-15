@@ -36,6 +36,7 @@ class Cart(models.Model):
     category = models.CharField(max_length=100, choices=CATEGORY_CHOICES)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image= models.ImageField(upload_to = "cart/")
+    item_id=models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def __str__(self):

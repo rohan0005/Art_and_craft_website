@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Details</title>
+    <!-- Add Tailwind CSS link here -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+    <div class="p-16 bg-gray-600 m-10 rounded-2xl">
+
+        <div class="grid grid-cols-3">
+
+            <div>
+                <a class="text-2xl text-blue-500 underline" href="javascript:history.back()">Back</a>
+            </div>
+
+            <div class="text-2xl text-white">
+                <p>Explore / ViewDetails</p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="container mx-auto p-4 flex ">
+        
+        <div class="">
+            {% if item.image %}
+            <img src="{{ item.image.url }}" alt="{{ item.title }}" class="w-93 h-96 rounded-lg shadow-md">
+            {% endif %}
+        </div>
+        
+        <div class="w-1/2 ml-4 ml-14">
+            <h1 class="text-2xl font-semibold">{{ item.title }}</h1>
+            <p class="text-gray-500 mt-2">{{ item.category|capfirst }}</p>
+            <p class="text-gray-500 mt-2">{{item.description}}</p>
+            <p class="text-gray-500 mt-2">Uploaded by: {{item.user}}</p>
+            <p class="text-green-600 text-2xl font-semibold mt-4">${{ item.price }}</p>
+            
+            
+            <!-- You can add more item details here -->
+
+            {% if request.user.is_authenticated %}
+            <form action="" method="post">  
+                {% csrf_token %}
+                <input type="hidden" name="item_id" value="{{ item.id }}"> 
+                <input type="hidden" name="item_title" value="{{ item.title }}"> 
+                <input type="hidden" name="item_category" value="{{ item.category }}">
+                <input type="hidden" name="item_price" value="{{ item.price }}">
+                <input type="hidden" name="item_image" value="{{ item.image.url }}">
+                <input type="hidden" name="user" value="{{ request.user }}">
+                <button name="add" onclick="addtocart()" class="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Add to My Cart</button>
+                </form> 
+                {% else %}
+                
+                <button  onclick="cart()" class="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600" >Add to My Cart</button>
+                
+                {% endif %}
+                <br>
+                <a href="#" class="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600" >Proceed for exchange</a>
+
+        </div>
+    </div>
+
+    <script>
+        function cart() {
+          alert("Please Login to add to cart!");
+        }
+        
+        function addtocart(){
+          alert("Item added to your cart!");
+        }
+        
+        </script>
+</body>
+</html>

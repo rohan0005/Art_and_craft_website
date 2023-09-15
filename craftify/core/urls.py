@@ -23,6 +23,9 @@ urlpatterns = [
     
     path('cart', views.cart, name='cart'),  
     
+    path('viewDetails/<int:item_id>', views.viewDetails, name='viewDetails'),  
+    
+    
     
  
 ]

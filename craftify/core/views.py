@@ -22,22 +22,27 @@ def explore(request, category=None):
     
     if request.method=="POST":
         if "add" in request.POST:
-            if request.POST.get("item_title"):
+            if request.POST.get("item_id"):
+                item_id= request.POST.get("item_id")
                 item_title= request.POST.get("item_title")
                 item_category= request.POST.get("item_category")
                 item_price= request.POST.get("item_price")
                 img= request.POST.get("item_image")
                 item_image = img.replace("/images/images/", "/images/")
-                print(item_image)
+                print(item_id)
                 uploaded_user= request.POST.get("user")
                 
                 user_instance = User.objects.get(username=uploaded_user)
-                 
+                # Check if the item is already in the cart
+                if not Cart.objects.filter(user=user_instance, item_id=item_id).exists(): 
+                    addToCart = Cart(item_id=item_id,title=item_title,category=item_category,price=item_price,image=item_image,user=user_instance)
+                    addToCart.save()
+                    
+               
+                    
+                    
                 
-                addToCart = Cart(title=item_title,category=item_category,price=item_price,image=item_image,user=user_instance)
-                
-                addToCart.save()
-                
+     
             
     
     Items = UserUploadedItem.objects.all().order_by('-id')
@@ -285,17 +290,50 @@ def cart(request):
         totalPrice += item.price
     
     totalProducts = cartItems.count()
-    
-    
-    
-    # u = request.user
-    # print(cartItems)
+
+    if request.method == "POST":
+        
+        item_id = request.POST.get("item_id")
+        DeleteItem = Cart.objects.get(id=item_id, user=request.user)
+        DeleteItem.delete()
+        return redirect('cart')
+
     
     context={
         'cartItems':cartItems,
         'totalProducts':totalProducts,
         'totalPrice':totalPrice,
+
     }
 
     
     return render(request, 'cart.html', context)
+
+
+def viewDetails(request,item_id):
+    
+    if request.method=="POST":
+        if "add" in request.POST:
+            if request.POST.get("item_id"):
+                item_id= request.POST.get("item_id")
+                item_title= request.POST.get("item_title")
+                item_category= request.POST.get("item_category")
+                item_price= request.POST.get("item_price")
+                img= request.POST.get("item_image")
+                item_image = img.replace("/images/images/", "/images/")
+                print(item_id)
+                uploaded_user= request.POST.get("user")
+                
+                user_instance = User.objects.get(username=uploaded_user)
+                # Check if the item is already in the cart
+                if not Cart.objects.filter(user=user_instance, item_id=item_id).exists(): 
+                    addToCart = Cart(item_id=item_id,title=item_title,category=item_category,price=item_price,image=item_image,user=user_instance)
+                    addToCart.save()
+                    
+                    
+    print("id is ", item_id)
+    item = UserUploadedItem.objects.get(id=item_id)
+    context={
+        "item":item,
+    }
+    return render(request, 'viewDetails.html',context)
